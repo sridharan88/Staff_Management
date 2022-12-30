@@ -4,9 +4,9 @@ import com.staffmanagement.management.model.Subject;
 import com.staffmanagement.management.repository.SubjectRepository;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 @Service
 
@@ -19,7 +19,8 @@ public class SubjectService {
     }
 
     public List<Subject> getAllSubjects() {
-        return subjectRepository.findAll();
+        List<Subject> subjects = subjectRepository.findAll();
+        return subjects;
     }
 
     public void deleteSubId(int subId) {
