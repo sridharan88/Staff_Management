@@ -2,17 +2,20 @@ package com.staffmanagement.management.controller;
 
 import com.staffmanagement.management.model.Allotment;
 import com.staffmanagement.management.model.ClassDetails;
+import com.staffmanagement.management.model.LeaveDetails;
 import com.staffmanagement.management.model.Role;
 import com.staffmanagement.management.model.StaffDetails;
 import com.staffmanagement.management.model.Subject;
 import com.staffmanagement.management.service.AllotmentService;
 import com.staffmanagement.management.service.ClassService;
+import com.staffmanagement.management.service.LeaveService;
 import com.staffmanagement.management.service.RoleService;
 import com.staffmanagement.management.service.StaffService;
 import com.staffmanagement.management.service.SubjectService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +42,8 @@ public class AdminController {
     private ClassService classService;
     @Autowired
     private AllotmentService allotmentService;
+    @Autowired 
+    private LeaveService leaveService;
 
     // subject
     @PostMapping("/subject")
@@ -47,13 +52,13 @@ public class AdminController {
         return subjectService.saveSubject(subject);
     }
 
-    @PutMapping
-    public Optional<Subject> updateSubject(@RequestBody Subject subject) {
-        return subjectService.updateBySubId(subject);
+    @PutMapping("/subject/update/{subId}")
+    public ResponseEntity<Subject> updateSubject(@PathVariable("subId") int subId,@RequestBody Subject subject) {
+        return subjectService.updateBySubId(subId, subject);
     }
 
-    @DeleteMapping("/subject/del")
-    public void deleteSubject(@RequestParam("subId") int subId) {
+    @DeleteMapping("/subject/{subId}")
+    public void deleteSubject(@PathVariable("subId") int subId) {
         subjectService.deleteSubId(subId);
     }
 
@@ -63,8 +68,13 @@ public class AdminController {
         return staffService.storeMethod(staffDetails);
     }
 
-    @DeleteMapping("/staff/del")
-    public void deleteStaff(@RequestParam("id") int id) {
+    @PutMapping("/staff/update/{id}")
+    public ResponseEntity<StaffDetails> updateStaffs(@PathVariable("id") int id,@RequestBody StaffDetails staffDetails){
+        return staffService.updateById(id,staffDetails);
+    }
+
+    @DeleteMapping("/staff/{id}")
+    public void deleteStaff(@PathVariable("id") int id) {
         staffService.deleteStaffId(id);
     }
 
@@ -75,6 +85,10 @@ public class AdminController {
          return roleService.getRoles();
      }
     
+     @PutMapping("/role/update/{no}")
+     public ResponseEntity<Role> updateRole(@PathVariable("no")int no,@RequestBody Role role){
+        return roleService.updateById(no,role);
+     }
 
     @DeleteMapping("/role/{no}")
     public void deleteRole(@PathVariable("no") int no) {
@@ -87,8 +101,13 @@ public class AdminController {
         return classService.postClasses(classDetails);
     }
 
-    @DeleteMapping("/class/del")
-    public void deleteClass(@RequestParam("clsId") int clsId) {
+    @PutMapping("/class/update/{clsId}")
+    public ResponseEntity<ClassDetails> updateClass(@PathVariable("clsId") int clsId,@RequestBody ClassDetails classDetails){
+   return classService.updateById(clsId, classDetails);
+    }
+
+    @DeleteMapping("/class/{clsId}")
+    public void deleteClass(@PathVariable("clsId") int clsId) {
         classService.deleteClassId(clsId);
     }
 
@@ -98,12 +117,34 @@ public class AdminController {
         return allotmentService.saveAllotment(allotment);
     }
 
-   
+    @PutMapping("/allotment/update/{dayID}")
+    public ResponseEntity<Allotment> updateAll(@PathVariable("dayID")int dayID,@RequestBody Allotment allotment){
+        return allotmentService.updateById(dayID,allotment);
+    }
+
+    @DeleteMapping("/allotment/{dayID}")
+    public void deleteAllotment(@PathVariable("dayID")int dayID){
+        allotmentService.deleteById(dayID);
+    }
+
+    //Leave
+    @PutMapping("/leave/update/{id}")
+    public ResponseEntity<LeaveDetails> updateLeave(@PathVariable("id")int id,@RequestBody LeaveDetails leaveDetails){
+        return leaveService.updateById(id,leaveDetails);
+    }
+    @DeleteMapping("/leave/{id}")
+    public void deleteLeave(@PathVariable("id")int id){
+        leaveService.deleteByLeaveId(id);
+    }
+
+
+
     //staff_subject id get
     @GetMapping("/staff/sub")
     public Optional<StaffDetails> getStaffSubject(@RequestParam int id) {
         return staffService.getByID(id);
     }
+    
     
 
 }

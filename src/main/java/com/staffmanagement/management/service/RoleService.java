@@ -4,8 +4,12 @@ package com.staffmanagement.management.service;
 import com.staffmanagement.management.model.Role;
 import com.staffmanagement.management.repository.RoleRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 
 @Service
 
@@ -32,6 +36,20 @@ public class RoleService  {
     public void deleteRoleNo(int no) {
 
         roleRepository.deleteById(no);
+    }
+
+    public ResponseEntity<Role> updateById(int no, Role role) {
+        Optional<Role> roleId=roleRepository.findById(no);
+        if(roleId.isPresent()){
+            Role roleUpdate=roleId.get();
+            roleUpdate.setEmail(role.getEmail());
+            roleUpdate.setName(role.getName());
+            roleUpdate.setPassword(role.getPassword());
+            roleUpdate.setRole(role.getRole());
+            return new ResponseEntity<>(roleRepository.save(roleUpdate),HttpStatus.OK);
+        }else{
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // @Override

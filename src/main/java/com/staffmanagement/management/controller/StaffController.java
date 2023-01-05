@@ -2,11 +2,13 @@ package com.staffmanagement.management.controller;
 
 import com.staffmanagement.management.model.Allotment;
 import com.staffmanagement.management.model.ClassDetails;
+import com.staffmanagement.management.model.LeaveDetails;
 import com.staffmanagement.management.model.Role;
 import com.staffmanagement.management.model.StaffDetails;
 import com.staffmanagement.management.model.Subject;
 import com.staffmanagement.management.service.AllotmentService;
 import com.staffmanagement.management.service.ClassService;
+import com.staffmanagement.management.service.LeaveService;
 import com.staffmanagement.management.service.RoleService;
 import com.staffmanagement.management.service.StaffService;
 import com.staffmanagement.management.service.SubjectService;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 
 @RestController
@@ -36,6 +39,8 @@ public class StaffController {
     private AllotmentService allotmentService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private LeaveService leaveService;
 
     @GetMapping()
     public List<StaffDetails> getAllStaffs() {
@@ -62,4 +67,14 @@ public class StaffController {
 
         return roleService.saveRole(role);
     }
+//leaveDetails
+    @PostMapping("/leave")
+    public LeaveDetails postLeave(@RequestBody LeaveDetails leaveDetails){
+        return leaveService.saveLeaveDetails(leaveDetails);
+    }
+    @GetMapping("/get-leave-details")
+    public List<LeaveDetails> getLeaveDetails() {
+        return  leaveService.getDetails();
+    }
+    
 }
