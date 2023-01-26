@@ -1,7 +1,7 @@
 package com.staffmanagement.management.service;
 
-import com.staffmanagement.management.Exception.DaysNotFoundException;
-import com.staffmanagement.management.Exception.HolydayException;
+import com.staffmanagement.management.Exception.AlreadyExistsException;
+import com.staffmanagement.management.dto.StaffCountDto;
 import com.staffmanagement.management.model.Allotment;
 import com.staffmanagement.management.repository.AllotmentRepository;
 import java.util.List;
@@ -21,32 +21,13 @@ public class AllotmentService {
 
     public Allotment saveAllotment(Allotment allotment) throws Exception {
 
-        String day = allotment.days;
-        day = day.toUpperCase();
-
-        if (day.equals("MONDAY" )    || day.equals("THUESDAY")  ||
-            day.equals("WEDNESDAY")  || day.equals("THURSDAY")  ||
-            day.equals("FRIDAY")) {
-
-            // if (classDetails.periodCounts >= allotment.periods) {
-
-                return allotmentRepository.save(allotment);
-            }
-
-            // } else {
-
-            //     throw new PeriodCountMismatchException();
-            // }
-        // }
-
-         else if (day.equals("SATURDAY") || day.equals("SUNDAY") )  {
-
-              throw new HolydayException();
-
-        } else {
-
-              throw new DaysNotFoundException();
+       Allotment existAllotment = allotmentRepository.findAlreadyExist(allotment.getDays(),allotment.getPeriods(),allotment.getStaffDetails().getId());
+        if(existAllotment!=null){
+            throw new AlreadyExistsException(allotment.getStaffDetails().getName() +" already exist");
         }
+
+                      return allotmentRepository.save(allotment);
+          
     }
     
 
@@ -77,4 +58,7 @@ public class AllotmentService {
         allotmentRepository.deleteById(dayID);
     }
 
+    public  List<StaffCountDto> findCount(){
+         return allotmentRepository.findAllStaffCount();
+    }
 }

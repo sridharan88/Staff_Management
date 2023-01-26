@@ -1,8 +1,8 @@
 package com.staffmanagement.management.controller;
 
+import com.staffmanagement.management.dto.StaffCountDto;
 import com.staffmanagement.management.model.Allotment;
 import com.staffmanagement.management.model.ClassDetails;
-import com.staffmanagement.management.model.LeaveDetails;
 import com.staffmanagement.management.model.Role;
 import com.staffmanagement.management.model.StaffDetails;
 import com.staffmanagement.management.model.Subject;
@@ -13,7 +13,6 @@ import com.staffmanagement.management.service.RoleService;
 import com.staffmanagement.management.service.StaffService;
 import com.staffmanagement.management.service.SubjectService;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -42,18 +40,18 @@ public class AdminController {
     private ClassService classService;
     @Autowired
     private AllotmentService allotmentService;
-    @Autowired 
+    @Autowired
     private LeaveService leaveService;
 
     // subject
     @PostMapping("/subject")
-    public Subject postSubjectName(@RequestBody Subject subject) {
+    public Subject postSubjectName(@RequestBody Subject subject) throws Exception {
 
         return subjectService.saveSubject(subject);
     }
 
     @PutMapping("/subject/update/{subId}")
-    public ResponseEntity<Subject> updateSubject(@PathVariable("subId") int subId,@RequestBody Subject subject) {
+    public ResponseEntity<Subject> updateSubject(@PathVariable("subId") int subId, @RequestBody Subject subject) {
         return subjectService.updateBySubId(subId, subject);
     }
 
@@ -64,13 +62,14 @@ public class AdminController {
 
     // staffDetails
     @PostMapping("/staff")
-    public StaffDetails postStaffName(@RequestBody StaffDetails staffDetails) {
+    public StaffDetails postStaffName(@RequestBody StaffDetails staffDetails) throws Exception {
         return staffService.storeMethod(staffDetails);
     }
 
     @PutMapping("/staff/update/{id}")
-    public ResponseEntity<StaffDetails> updateStaffs(@PathVariable("id") int id,@RequestBody StaffDetails staffDetails){
-        return staffService.updateById(id,staffDetails);
+    public ResponseEntity<StaffDetails> updateStaffs(@PathVariable("id") int id,
+            @RequestBody StaffDetails staffDetails) {
+        return staffService.updateById(id, staffDetails);
     }
 
     @DeleteMapping("/staff/{id}")
@@ -79,16 +78,16 @@ public class AdminController {
     }
 
     // Role
-     
-     @GetMapping("/getrole")
-     public List<Role> getAllRoles() {
-         return roleService.getRoles();
-     }
-    
-     @PutMapping("/role/update/{no}")
-     public ResponseEntity<Role> updateRole(@PathVariable("no")int no,@RequestBody Role role){
-        return roleService.updateById(no,role);
-     }
+
+    @GetMapping("/getrole")
+    public List<Role> getAllRoles() {
+        return roleService.getRoles();
+    }
+
+    @PutMapping("/role/update/{no}")
+    public ResponseEntity<Role> updateRole(@PathVariable("no") int no, @RequestBody Role role) {
+        return roleService.updateById(no, role);
+    }
 
     @DeleteMapping("/role/{no}")
     public void deleteRole(@PathVariable("no") int no) {
@@ -102,8 +101,9 @@ public class AdminController {
     }
 
     @PutMapping("/class/update/{clsId}")
-    public ResponseEntity<ClassDetails> updateClass(@PathVariable("clsId") int clsId,@RequestBody ClassDetails classDetails){
-   return classService.updateById(clsId, classDetails);
+    public ResponseEntity<ClassDetails> updateClass(@PathVariable("clsId") int clsId,
+            @RequestBody ClassDetails classDetails) {
+        return classService.updateById(clsId, classDetails);
     }
 
     @DeleteMapping("/class/{clsId}")
@@ -118,33 +118,31 @@ public class AdminController {
     }
 
     @PutMapping("/allotment/update/{dayID}")
-    public ResponseEntity<Allotment> updateAll(@PathVariable("dayID")int dayID,@RequestBody Allotment allotment){
-        return allotmentService.updateById(dayID,allotment);
+    public ResponseEntity<Allotment> updateAll(@PathVariable("dayID") int dayID, @RequestBody Allotment allotment) {
+        return allotmentService.updateById(dayID, allotment);
     }
 
     @DeleteMapping("/allotment/{dayID}")
-    public void deleteAllotment(@PathVariable("dayID")int dayID){
+    public void deleteAllotment(@PathVariable("dayID") int dayID) {
         allotmentService.deleteById(dayID);
     }
 
-    //Leave
-    @PutMapping("/leave/update/{id}")
-    public ResponseEntity<LeaveDetails> updateLeave(@PathVariable("id")int id,@RequestBody LeaveDetails leaveDetails){
-        return leaveService.updateById(id,leaveDetails);
+    @GetMapping("/allotment/staff_count")
+    public List<StaffCountDto> findByStaffCounts() {
+        return allotmentService.findCount();
     }
+
+    // Leave
+
     @DeleteMapping("/leave/{id}")
-    public void deleteLeave(@PathVariable("id")int id){
+    public void deleteLeave(@PathVariable("id") int id) {
         leaveService.deleteByLeaveId(id);
     }
 
-
-
-    //staff_subject id get
-    @GetMapping("/staff/sub")
-    public Optional<StaffDetails> getStaffSubject(@RequestParam int id) {
-        return staffService.getByID(id);
+    // staff_subject
+    @GetMapping("/stf-sub/{subId}")
+    public List<StaffDetails> getStaffSubject(@PathVariable("subId") int subId) {
+        return staffService.getBySubId(subId);
     }
-    
-    
 
 }

@@ -16,8 +16,9 @@ public class StaffService {
     @Autowired
     private StaffRepository staffRepository;
 
-    public StaffDetails storeMethod(StaffDetails staffDetails) {
-        return staffRepository.save(staffDetails);
+    public StaffDetails storeMethod(StaffDetails staffDetails)  {
+         
+              return staffRepository.save(staffDetails);
     }
 
     public List<StaffDetails> getStaffs() {
@@ -27,9 +28,7 @@ public class StaffService {
     public void deleteStaffId(int id) {
         staffRepository.deleteById(id);
     }
-    public  Optional<StaffDetails> getByID(int id){
-        return staffRepository.findById(id);
-    }
+   
 
     public ResponseEntity<StaffDetails> updateById(int id, StaffDetails staffDetails) {
       Optional<StaffDetails>staff=staffRepository.findById(id);
@@ -44,5 +43,8 @@ public class StaffService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
     }
+public List<StaffDetails> getBySubId(int subId){
+  return staffRepository.findAllStaff(subId);
+}
 
 }

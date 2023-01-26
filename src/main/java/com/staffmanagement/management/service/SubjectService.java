@@ -1,5 +1,6 @@
 package com.staffmanagement.management.service;
 
+import com.staffmanagement.management.Exception.AlreadyExistsException;
 import com.staffmanagement.management.model.Subject;
 import com.staffmanagement.management.repository.SubjectRepository;
 import java.util.List;
@@ -19,7 +20,12 @@ public class SubjectService {
   @Autowired
   private SubjectRepository subjectRepository;
 
-  public Subject saveSubject(Subject subject) {
+  public Subject saveSubject(Subject subject) throws Exception{
+
+  Optional  <Subject> existSubject=subjectRepository.findById(subject.getSubId());
+    if(existSubject != null){
+      throw new AlreadyExistsException("This subject is Already Exists");
+    }
     return subjectRepository.save(subject);
   }
 
@@ -47,5 +53,10 @@ public class SubjectService {
     }
 
   }
+
+
+
+
+
 
 }

@@ -1,12 +1,16 @@
 package com.staffmanagement.management.model;
 
 
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
+
 
 
 
@@ -25,5 +29,8 @@ public class ClassDetails {
     private String clsName;
     public int periodCounts;
 
+    @OneToMany
+    @JoinTable(name = "class_subject")
+    public List<Subject>subjects;
 
 }
